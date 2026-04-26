@@ -1,0 +1,1046 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harsha & Samadhi - Wedding Invitation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background: #1a1a1a;
+            color: #5a4a42;
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        /* ========== OPENING SCREEN - CLEAN DARK BACKGROUND ========== */
+        .opening-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000 !important;
+            overflow: hidden;
+            transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .opening-screen.fade-out {
+            opacity: 0;
+            transform: scale(1.5);
+            pointer-events: none;
+        }
+
+        /* All marquee elements hidden - only envelope visible */
+        .marquee-background {
+            display: none !important;
+        }
+
+        .marquee-row {
+            display: none !important;
+        }
+
+        .photo-item {
+            display: none !important;
+        }
+
+        .marquee-overlay {
+            display: none !important;
+        }
+
+        /* ========== FULL-PAGE ENVELOPE ========== */
+        .envelope-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+            perspective: 1500px;
+            cursor: pointer;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+            transform-style: preserve-3d;
+        }
+
+        .envelope-wrapper.opened {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Envelope Body - Left and Right Doors */
+        .envelope-body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #D4C5B9 0%, #C9B5A8 50%, #1a1a1a 50%, #000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.2);
+            transform-style: preserve-3d;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Left door */
+        .envelope-body::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, #D4C5B9 0%, #C9B5A8 100%);
+            transform-origin: left;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 3;
+            box-shadow: inset -5px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Right door */
+        .envelope-body::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, #1a1a1a 0%, #000 100%);
+            transform-origin: right;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 3;
+            box-shadow: inset 5px 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Open animation for doors */
+        .envelope-body.opened::before {
+            transform: rotateY(-120deg);
+        }
+
+        .envelope-body.opened::after {
+            transform: rotateY(120deg);
+        }
+
+        /* Envelope Flap - Hidden */
+        .envelope-flap {
+            display: none;
+        }
+
+        /* Return address (top left) */
+        .return-address {
+            display: none;
+        }
+
+        /* Deliver to text */
+        .deliver-text {
+            display: none;
+        }
+
+        .deliver-label {
+            display: none;
+        }
+
+        .deliver-names {
+            display: none;
+        }
+
+        .deliver-address {
+            display: none;
+        }
+
+        /* CSS Wax Seal - Gold with rings */
+        .wax-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle at 35% 35%, #D4AF37, #B8860B, #8B6914);
+            border-radius: 50%;
+            box-shadow: 
+                0 15px 40px rgba(0,0,0,0.5),
+                inset 0 -2px 5px rgba(0,0,0,0.4),
+                inset 2px 2px 4px rgba(255,255,255,0.3);
+            z-index: 15;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        /* Wedding rings inside seal */
+        .wax-seal::before {
+            content: '';
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            border: 3px solid rgba(255,255,255,0.9);
+            border-radius: 50%;
+            top: 22%;
+            left: 35%;
+            box-shadow: 8px 8px 0 rgba(255,255,255,0.8);
+        }
+
+        .wax-seal::after {
+            content: '\2661';
+            font-family: 'Great Vibes', cursive;
+            color: rgba(255,255,255,0.9);
+            font-size: 28px;
+            text-shadow: -2px -2px 4px rgba(0,0,0,0.6);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hide wax seal when flap swings open */
+        .envelope-container.open .wax-seal {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ========== MAIN INVITATION PAGES ========== */
+        body {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .section {
+            width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* PAGE 1: COVER */
+        .page-cover {
+            background: linear-gradient(135deg, #4A4037 0%, #3A3330 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('pictures/NZ6_6878.JPG.jpeg') center/cover no-repeat;
+        }
+
+        .cover-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(141, 109, 95, 0.35);
+            mix-blend-mode: multiply;
+        }
+
+        /* Vignette gradient overlay (darker at edges) */
+        .cover-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                ellipse at center,
+                transparent 0%,
+                rgba(0, 0, 0, 0.3) 50%,
+                rgba(0, 0, 0, 0.5) 100%
+            );
+            pointer-events: none;
+        }
+
+        /* Content on top of image */
+        .cover-content {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+            color: white;
+            text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            padding: 0 20px;
+            animation: fadeInDown 1s ease-out 0.3s both;
+        }
+
+        .pre-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .names-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .names-layout .name {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .names-layout .and {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            font-weight: 400;
+            text-transform: lowercase;
+            margin: 0 5px;
+            opacity: 0.9;
+        }
+
+        .post-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        .date-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            font-family: 'Playfair Display', serif;
+            color: white;
+        }
+
+        .date-side {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 100px;
+        }
+
+        .date-line {
+            width: 100%;
+            height: 1px;
+            background-color: white;
+            margin: 8px 0;
+            box-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+        }
+
+        .date-side span {
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .date-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .date-center .month {
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .date-center .day {
+            font-size: 3.5rem;
+            line-height: 1;
+            margin: 5px 0;
+            font-weight: 400;
+        }
+
+        .date-center .year {
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+        }
+
+        /* ========== PAGE 1.5: OUR STORY ========== */
+        .page-story {
+            background: #ffffff;
+            padding: 60px 30px;
+        }
+
+        .story-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            color: #8D6B56;
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+
+        .story-content {
+            max-width: 600px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .story-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #5a4a42;
+            margin-bottom: 20px;
+        }
+
+        /* ========== PAGE 2: TIMELINE / THE DAY ========== */
+        .page-timeline {
+            background: #e7e1be;
+            padding: 60px 30px;
+            position: relative;
+        }
+
+        .page-timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 150px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 150"><path d="M0,50 Q300,0 600,50 T1200,50" fill="none" stroke="%23D4A574" stroke-width="2" opacity="0.3"/></svg>');
+            background-size: cover;
+            opacity: 0.5;
+        }
+
+        .timeline-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            color: #8D6B56;
+            margin-bottom: 60px;
+            text-align: center;
+            font-weight: 400;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-container {
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        /* Vertical timeline line */
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #C5A059 0%, #D4A574 50%, #C5A059 100%);
+            top: 0;
+            z-index: 1;
+        }
+
+        .timeline-item {
+            margin-bottom: 50px;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            padding-left: 100px;
+        }
+
+        /* Timeline icon dot */
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border: 3px solid #C5A059;
+            border-radius: 50%;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-content {
+            width: 100%;
+            padding: 10px 0;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .timeline-content:hover {
+            transform: translateX(5px);
+            box-shadow: none;
+        }
+
+        .timeline-time {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #8D6B56;
+            margin-bottom: 3px;
+            letter-spacing: 1px;
+        }
+
+        .timeline-event {
+            font-size: 1rem;
+            color: #5a4a42;
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .timeline-description {
+            font-size: 0.85rem;
+            color: #8D6B56;
+            font-style: normal;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========== PAGE 3: RSVP ========== */
+        .page-rsvp {
+            background: #ffffff;
+            flex-direction: column;
+            padding: 60px 30px;
+            color: #000;
+            text-align: center;
+        }
+
+        .rsvp-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .rsvp-top {
+            position: relative;
+            margin-bottom: 20px;
+            margin-top: 0px;
+        }
+
+        .rsvp-please {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            position: absolute;
+            top: -45px;
+            left: -15px;
+            color: #222;
+            z-index: 2;
+            transform: rotate(-5deg);
+        }
+
+        .rsvp-letters {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .rsvp-letters .rs, .rsvp-letters .vp {
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
+            line-height: 0.85;
+            font-weight: 700;
+            letter-spacing: -2px;
+            color: #000;
+        }
+
+        .rsvp-line {
+            width: 130%;
+            height: 4px;
+            background-color: #000;
+            margin: 8px 0;
+            transform: translateX(-15%); /* slightly overhang left */
+        }
+
+        .rsvp-by-date {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            margin-bottom: 35px;
+            text-transform: uppercase;
+        }
+
+        .rsvp-button {
+            background: #000;
+            color: #fff;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            padding: 12px 60px;
+            border-radius: 35px;
+            text-decoration: none;
+            margin-bottom: 30px;
+            display: inline-block;
+            transition: transform 0.3s ease, background 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .rsvp-button:hover {
+            background: #333;
+            transform: scale(1.05);
+        }
+
+        .rsvp-instructions {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .rsvp-thankyou {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== SCROLL ANIMATIONS ========== */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: opacity, transform;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== MOBILE RESPONSIVENESS ========== */
+        @media (max-width: 768px) {
+            .names-layout .name {
+                font-size: 2.2rem;
+            }
+
+            .names-layout .and {
+                font-size: 2.4rem;
+            }
+
+            .date-center .day {
+                font-size: 2.8rem;
+            }
+
+            .date-side {
+                min-width: 80px;
+            }
+
+            .date-side span {
+                font-size: 0.75rem;
+            }
+
+            .page-2 h2,
+            .page-rsvp h2,
+            .story-title {
+                font-size: 1.8rem;
+                margin-bottom: 40px;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 70px;
+                margin-right: 0;
+                text-align: left;
+            }
+
+            .timeline-dot {
+                left: 20px;
+            }
+
+            .envelope {
+                width: 85%;
+                height: 280px;
+            }
+
+            .wax-seal {
+                width: 100px;
+                height: 100px;
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-1 h1 {
+                font-size: 2rem;
+            }
+
+            .page-1 .couple-names {
+                font-size: 1.4rem;
+            }
+
+            .page-1 .date {
+                font-size: 1rem;
+            }
+
+            .page-1 .subtitle {
+                font-size: 0.95rem;
+                letter-spacing: 1px;
+            }
+
+            .page-2,
+            .page-rsvp,
+            .page-story {
+                padding: 40px 20px;
+            }
+
+            .page-2 h2,
+            .page-rsvp h2,
+            .story-title {
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+            }
+
+            .timeline-margin-top {
+                margin-top: 20px;
+            }
+
+            .rsvp-text {
+                font-size: 1rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- OPENING SCREEN WITH SEAMLESS PHOTO MARQUEE AND GREEN ENVELOPE -->
+    <div class="opening-screen">
+        <!-- Background marquee rows -->
+        <div class="marquee-background">
+            <div class="marquee-row">
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.04.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.05.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.07.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.08.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.10.jpeg');"></div>
+                <!-- Duplicated for seamless loop -->
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.04.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.05.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.07.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.08.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.10.jpeg');"></div>
+            </div>
+            <div class="marquee-row">
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.12.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.13.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.15.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.17.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.10.jpeg');"></div>
+                <!-- Duplicated for seamless loop -->
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.12.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.13.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.15.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.17.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.10.jpeg');"></div>
+            </div>
+            <div class="marquee-row">
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.04.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.07.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.10.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.13.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.17.jpeg');"></div>
+                <!-- Duplicated for seamless loop -->
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.04.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.07.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.10.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.13.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.17.jpeg');"></div>
+            </div>
+            <div class="marquee-row">
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.17.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.13.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.10.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.07.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.04.jpeg');"></div>
+                <!-- Duplicated for seamless loop -->
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.17.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.13.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.10.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.07.jpeg');"></div>
+                <div class="photo-item" style="background-image: url('pictures/WhatsApp Image 2026-04-15 at 18.37.04.jpeg');"></div>
+            </div>
+        </div>
+
+        <!-- Dark overlay -->
+        <div class="marquee-overlay"></div>
+
+        <!-- Green Envelope -->
+        <div class="envelope-container">
+            <div class="envelope-wrapper">
+                <div class="envelope-body">
+                    <!-- Return address -->
+                    <div class="return-address">
+                       Harsha & Samadhi<br>
+                        Get Together
+                    </div>
+
+                    <!-- Envelope flap -->
+                    <div class="envelope-flap"></div>
+
+                    <!-- Wax Seal -->
+                    <div class="wax-seal"></div>
+
+                    <!-- Deliver to text -->
+                    <div class="deliver-text">
+                        <div class="deliver-label", style="font-size: 30px;"> Tap to Open:
+                        </div>
+                    
+                        <div class="deliver-address",style="font-size: 100px;">
+                            Harsha & Samadhi<br>
+                            June 01 , 2026
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 1: COVER -->
+    <div class="section page-cover">
+        <div class="cover-bg fade-up"></div>
+        <div class="cover-content fade-up">
+            <div class="pre-title">Together with their families</div>
+            <div class="names-layout">
+                <span class="name">Harsha</span>
+                <span class="and">and</span>
+                <span class="name">Samadhi</span>
+            </div>
+            <div class="post-title">Invite you<br>to their wedding celebration</div>
+            
+            <div class="date-layout">
+                <div class="date-side">
+                    <div class="date-line"></div>
+                    <span>Monday</span>
+                    <div class="date-line"></div>
+                </div>
+                <div class="date-center">
+                    <div class="month">June</div>
+                    <div class="day">01</div>
+                    <div class="year">2026</div>
+                </div>
+                <div class="date-side">
+                    <div class="date-line"></div>
+                    <span>At 3:30 PM</span>
+                    <div class="date-line"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 1.5: OUR STORY -->
+    <div class="section page-story">
+        <h2 class="story-title fade-up">Our Story</h2>
+        <div class="story-content">
+            <p class="story-text fade-up">Samadhi and Harsha didn’t start off as a love story—they started off arguing.</p>
+            <p class="story-text fade-up">Back in 2020, they were just classmates who didn’t really care about each other. When they had to work together, it quickly turned into constant debates. Harsha stayed calm and always had a response, which only annoyed Samadhi more.</p>
+            <p class="story-text fade-up">But over time, the arguments turned into jokes, and the rivalry became a solid friendship. Somewhere along the way, Harsha caught feelings. Samadhi acted clueless… but maybe she wasn’t.</p>
+            <p class="story-text fade-up">After a lot of teasing from friends, Harsha finally asked her out—and she said yes.</p>
+            <p class="story-text fade-up">Three years later, they’re still together and decided it’s time to get married and keep arguing forever.</p>
+        </div>
+    </div>
+
+    <!-- PAGE 2: TIMELINE / THE DAY -->
+    <div class="section page-timeline">
+        <h2 class="timeline-title fade-up">the day</h2>
+        <div class="timeline-container">
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot">⛪</div>
+                <div class="timeline-content">
+                    <div class="timeline-time">3:30 PM</div>
+                    <div class="timeline-event">Wedding Ceremony</div>
+                    <div class="timeline-description">852 N 1st Ave, West Hollywood</div>
+                </div>
+            </div>
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot">🍸</div>
+                <div class="timeline-content">
+                    <div class="timeline-time">4:30 PM</div>
+                    <div class="timeline-event">Cocktail Hour</div>
+                    <div class="timeline-description">852 N 1st Ave, West Hollywood</div>
+                </div>
+            </div>
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot">📷</div>
+                <div class="timeline-content">
+                    <div class="timeline-time">5:00 PM</div>
+                    <div class="timeline-event">Photo Session</div>
+                    <div class="timeline-description">852 N 1st Ave, West Hollywood</div>
+                </div>
+            </div>
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot">🍽️</div>
+                <div class="timeline-content">
+                    <div class="timeline-time">6:30 PM</div>
+                    <div class="timeline-event">Dinner Reception</div>
+                    <div class="timeline-description">852 N 1st Ave, West Hollywood</div>
+                </div>
+            </div>
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot">💃</div>
+                <div class="timeline-content">
+                    <div class="timeline-time">8:00 PM</div>
+                    <div class="timeline-event">Dance Party</div>
+                    <div class="timeline-description">852 N 1st Ave, West Hollywood</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: RSVP -->
+    <div class="section page-rsvp">
+        <div class="rsvp-container">
+            <div class="rsvp-top fade-up">
+                <div class="rsvp-please">please</div>
+                <div class="rsvp-letters">
+                    <div class="rs">RS</div>
+                    <div class="rsvp-line"></div>
+                    <div class="vp">VP</div>
+                </div>
+            </div>
+            
+            <div class="rsvp-by-date fade-up">BY JUNE 01</div>
+            
+            <a href="https://forms.google.com/" target="_blank" class="rsvp-button fade-up">RSVP</a>
+            
+            <p class="rsvp-instructions fade-up">
+                Please click the RSVP button and kindly<br>
+                fill out the form to confirm your<br>
+                attendance.
+            </p>
+            
+            <div class="rsvp-thankyou fade-up">THANK YOU!</div>
+        </div>
+    </div>
+
+    <script>
+        const envelopeContainer = document.querySelector('.envelope-container');
+        const envelopeBody = document.querySelector('.envelope-body');
+        const envelopeWrapper = document.querySelector('.envelope-wrapper');
+        const openingScreen = document.querySelector('.opening-screen');
+
+        // Click to open envelope
+        envelopeContainer.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            if (!envelopeContainer.classList.contains('open')) {
+                // Step 1: Open doors immediately
+                envelopeContainer.classList.add('open');
+                envelopeBody.classList.add('opened');
+                
+                // Step 2: After 0.6 seconds delay, fade out wrapper
+                setTimeout(() => {
+                    envelopeWrapper.classList.add('opened');
+                    
+                    // Step 3: After fade out completes, hide opening screen
+                    setTimeout(() => {
+                        openingScreen.style.display = 'none';
+                    }, 800);
+                }, 600);
+            }
+        });
+
+        // Escape key to go back
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                window.scrollTo(0, 0);
+                envelopeContainer.classList.remove('open');
+                envelopeBody.classList.remove('opened');
+                envelopeWrapper.classList.remove('opened');
+                openingScreen.style.display = 'block';
+            }
+        });
+
+        // Intersection Observer for Scroll Animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        // Optional: remove visible class if you want them to re-animate on scrolling up
+                        entry.target.classList.remove('visible');
+                    }
+                });
+            }, observerOptions);
+
+            const fadeUpElements = document.querySelectorAll('.fade-up');
+            fadeUpElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
