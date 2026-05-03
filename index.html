@@ -35,13 +35,15 @@
             justify-content: center;
             background: #FDFBF7 !important; /* Elegant Cream background */
             overflow: hidden;
-            transition: opacity 1.2s ease;
+            transition: opacity 1.2s ease, transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
             opacity: 1;
+            transform: translateY(0);
             pointer-events: auto;
         }
 
         .opening-screen.fade-out {
             opacity: 0;
+            transform: translateY(-100vh); /* slides the whole cream curtain away UP */
             pointer-events: none;
         }
 
@@ -133,7 +135,7 @@
 
         .invite-text {
             font-family: 'Playfair Display', serif;
-            font-size: 13px;
+            font-size: 15px;
             letter-spacing: 1px;
             margin-bottom: 20px;
             color: #8D6B56;
@@ -141,7 +143,7 @@
 
         .invite-names {
             font-family: 'Playfair Display', serif;
-            font-size: 26px;
+            font-size: 32px;
             letter-spacing: 4px;
             font-weight: 400;
             margin-bottom: 20px;
@@ -206,8 +208,8 @@
             bottom: 0;
             left: 50%;
             transform: translate(-50%, 50%);
-            width: 130px;
-            height: 130px;
+            width: 300px;
+            height: 300px;
             background: url('pictures/wax-seal.png') center/contain no-repeat;
             z-index: 15;
             transition: all 0.3s ease;
@@ -259,8 +261,8 @@
             height: 100%;
             background: url('pictures/NZ6_6878.JPG.jpeg') center/cover no-repeat;
             opacity: 0;
-            transform: scale(1.05);
-            transition: opacity 1.5s ease-out, transform 4s ease-out;
+            transform: scale(1.1);
+            transition: opacity 2s ease-out, transform 8s ease-out;
         }
 
         .envelope-opened .cover-bg {
@@ -858,7 +860,7 @@
             }
 
             .invite-names {
-                font-size: 22px;
+                font-size: 26px;
             }
         }
 
