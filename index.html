@@ -66,11 +66,12 @@
 
         /* ========== FULL-PAGE ENVELOPE ========== */
         .envelope-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            height: 220px;
             z-index: 10;
             perspective: 1500px;
             cursor: pointer;
@@ -81,72 +82,113 @@
             width: 100%;
             height: 100%;
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-origin: center;
             transform-style: preserve-3d;
         }
 
         .envelope-wrapper.opened {
             opacity: 0;
+            transform: scale(1.5);
             pointer-events: none;
         }
 
-        /* Envelope Body - Left and Right Doors */
+        /* Base background of the envelope (inside back) */
         .envelope-body {
-            position: relative;
+            position: absolute;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, #D4C5B9 0%, #C9B5A8 50%, #1a1a1a 50%, #000 100%);
+            background: #8D6B56; /* Inside envelope color */
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.2);
-            transform-style: preserve-3d;
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Left door */
-        .envelope-body::before {
-            content: '';
+        /* The invitation card inside */
+        .envelope-card {
             position: absolute;
-            left: 0;
-            top: 0;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(90deg, #D4C5B9 0%, #C9B5A8 100%);
-            transform-origin: left;
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 3;
-            box-shadow: inset -5px 0 20px rgba(0, 0, 0, 0.1);
+            bottom: 5px;
+            left: 5px;
+            width: calc(100% - 10px);
+            height: calc(100% - 10px);
+            background: #fff;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
         }
 
-        /* Right door */
-        .envelope-body::after {
-            content: '';
+        .envelope-card h3 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 28px;
+            color: #8D6B56;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        .envelope-card p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            color: #5a4a42;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Front side folds */
+        .envelope-front-side {
             position: absolute;
-            right: 0;
-            top: 0;
-            width: 50%;
+            bottom: 0;
+            width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, #1a1a1a 0%, #000 100%);
-            transform-origin: right;
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #D4C5B9;
             z-index: 3;
-            box-shadow: inset 5px 0 20px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
         }
 
-        /* Open animation for doors */
-        .envelope-body.opened::before {
-            transform: rotateY(-120deg);
+        /* Front bottom fold */
+        .envelope-front-bottom {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 65%;
+            background: #C9B5A8;
+            border-radius: 0 0 5px 5px;
+            z-index: 4;
+            clip-path: polygon(0 100%, 100% 100%, 100% 0, 50% 40%, 0 0);
+            box-shadow: -2px -2px 10px rgba(0,0,0,0.1);
         }
 
-        .envelope-body.opened::after {
-            transform: rotateY(120deg);
-        }
-
-        /* Envelope Flap - Hidden */
+        /* Top Flap */
         .envelope-flap {
-            display: none;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 60%;
+            background: #D4C5B9;
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 5;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            border-radius: 5px 5px 0 0;
+            display: block;
+        }
+
+        /* Open animation */
+        .envelope-container.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1; /* Move behind after opening */
+        }
+        
+        .envelope-container.open .envelope-card {
+            transform: translateY(-80px);
+            z-index: 2; /* Move it up */
         }
 
         /* Return address (top left) */
@@ -174,11 +216,11 @@
         /* CSS Wax Seal - Gold with rings */
         .wax-seal {
             position: absolute;
-            top: 50%;
+            top: 100%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 120px;
-            height: 120px;
+            width: 80px;
+            height: 80px;
             background: radial-gradient(circle at 35% 35%, #D4AF37, #B8860B, #8B6914);
             border-radius: 50%;
             box-shadow: 
@@ -197,20 +239,20 @@
         .wax-seal::before {
             content: '';
             position: absolute;
-            width: 45px;
-            height: 45px;
-            border: 3px solid rgba(255,255,255,0.9);
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(255,255,255,0.9);
             border-radius: 50%;
-            top: 22%;
-            left: 35%;
-            box-shadow: 8px 8px 0 rgba(255,255,255,0.8);
+            top: 25%;
+            left: 33%;
+            box-shadow: 6px 6px 0 rgba(255,255,255,0.8);
         }
 
         .wax-seal::after {
             content: '\2661';
             font-family: 'Great Vibes', cursive;
             color: rgba(255,255,255,0.9);
-            font-size: 28px;
+            font-size: 22px;
             text-shadow: -2px -2px 4px rgba(0,0,0,0.6);
             position: relative;
             z-index: 1;
@@ -220,6 +262,7 @@
         .envelope-container.open .wax-seal {
             opacity: 0;
             pointer-events: none;
+            transition: opacity 0.3s;
         }
 
         /* ========== MAIN INVITATION PAGES ========== */
@@ -850,15 +893,18 @@
                 left: 20px;
             }
 
-            .envelope {
-                width: 85%;
-                height: 280px;
+            .envelope-container {
+                width: 300px;
+                height: 200px;
             }
 
             .wax-seal {
-                width: 100px;
-                height: 100px;
-                font-size: 22px;
+                width: 60px;
+                height: 60px;
+            }
+
+            .wax-seal::after {
+                font-size: 16px;
             }
         }
 
@@ -966,34 +1012,31 @@
         <!-- Dark overlay -->
         <div class="marquee-overlay"></div>
 
-        <!-- Green Envelope -->
+        <!-- Classic Envelope -->
         <div class="envelope-container">
             <div class="envelope-wrapper">
                 <div class="envelope-body">
-                    <!-- Return address -->
-                    <div class="return-address">
-                       Harsha & Samadhi<br>
-                        Get Together
+                    <!-- The card that slides out -->
+                    <div class="envelope-card">
+                        <h3>Harsha & Samadhi</h3>
+                        <p>June 01, 2026</p>
                     </div>
 
-                    <!-- Envelope flap -->
-                    <div class="envelope-flap"></div>
+                    <!-- Front side flaps -->
+                    <div class="envelope-front-side"></div>
+                    <div class="envelope-front-bottom"></div>
 
-                    <!-- Wax Seal -->
-                    <div class="wax-seal"></div>
-
-                    <!-- Deliver to text -->
-                    <div class="deliver-text">
-                        <div class="deliver-label", style="font-size: 30px;"> Tap to Open:
-                        </div>
-                    
-                        <div class="deliver-address",style="font-size: 100px;">
-                            Harsha & Samadhi<br>
-                            June 01 , 2026
-                        </div>
+                    <!-- Envelope top flap -->
+                    <div class="envelope-flap">
+                        <!-- Wax Seal -->
+                        <div class="wax-seal"></div>
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <div class="tap-to-open-text" style="position: absolute; bottom: 15%; width: 100%; text-align: center; color: white; font-family: 'Montserrat', sans-serif; font-size: 14px; letter-spacing: 3px; z-index: 20; opacity: 0.8; pointer-events: none;">
+            TAP TO OPEN
         </div>
     </div>
 
@@ -1146,11 +1189,12 @@
             e.stopPropagation();
             
             if (!envelopeContainer.classList.contains('open')) {
-                // Step 1: Open doors immediately
+                // Step 1: Open flap and slide card up
                 envelopeContainer.classList.add('open');
-                envelopeBody.classList.add('opened');
+                const tapText = document.querySelector('.tap-to-open-text');
+                if(tapText) tapText.style.opacity = '0';
                 
-                // Step 2: After 0.6 seconds delay, fade out wrapper
+                // Step 2: After 1.2 seconds delay (flap open + slide up), fade out wrapper
                 setTimeout(() => {
                     envelopeWrapper.classList.add('opened');
                     // Add class to trigger page 1 animations
@@ -1158,11 +1202,11 @@
                     // Unlock scrolling
                     document.body.classList.remove('locked');
                     
-                    // Step 3: After fade out completes, hide opening screen
+                    // Step 3: After fade out completes, hide opening screen completely
                     setTimeout(() => {
                         openingScreen.style.display = 'none';
                     }, 800);
-                }, 600);
+                }, 1400);
             }
         });
 
