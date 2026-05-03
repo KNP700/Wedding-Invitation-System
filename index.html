@@ -228,6 +228,10 @@
             scroll-behavior: smooth;
         }
 
+        body.locked {
+            overflow: hidden !important;
+        }
+
         .section {
             width: 100vw;
             height: 100vh;
@@ -417,8 +421,34 @@
 
         /* ========== PAGE 1.5: OUR STORY ========== */
         .page-story {
-            background: #ffffff;
+            position: relative;
             padding: 60px 30px;
+            overflow: hidden;
+        }
+
+        .page-story::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: url('pictures/DSC_6399 (1).JPG.jpeg') center/cover no-repeat;
+            filter: blur(5px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .page-story::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 0;
+            pointer-events: none;
         }
 
         .story-title {
@@ -429,12 +459,16 @@
             text-align: center;
             font-weight: 400;
             letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
         }
 
         .story-content {
             max-width: 600px;
             text-align: center;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         .story-text {
@@ -443,16 +477,59 @@
             line-height: 1.8;
             color: #5a4a42;
             margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
         }
 
-        /* ========== PAGE 2: TIMELINE / THE DAY ========== */
+        /* ========== P ========== */
         .page-timeline {
-            background: #e7e1be;
-            padding: 80px 30px 40px;
             position: relative;
             height: 100vh;
-            justify-content: flex-start;
+            overflow: hidden; /* Hide the fixed/absolute video bounds if necessary, though snapping handles positioning */
+        }
+
+        .timeline-video-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .timeline-video-bg {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: calc(100% + 20px);
+            height: calc(100% + 20px);
+            object-fit: cover;
+            filter: blur(5px);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .timeline-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(231, 225, 190, 0.7); /* Tint the video with the original yellowish color */
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .timeline-scroll-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 80px 30px 40px;
             overflow-y: auto;
+            z-index: 1;
         }
 
         .page-timeline::before {
@@ -625,15 +702,22 @@
             text-transform: uppercase;
         }
 
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
         .rsvp-button {
             background: #000;
             color: #fff;
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
-            padding: 12px 60px;
+            padding: 12px 40px;
             border-radius: 35px;
             text-decoration: none;
-            margin-bottom: 30px;
             display: inline-block;
             transition: transform 0.3s ease, background 0.3s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
@@ -641,6 +725,19 @@
 
         .rsvp-button:hover {
             background: #333;
+            transform: scale(1.05);
+        }
+
+        .transparent-button {
+            background: transparent;
+            color: #000;
+            border: 2px solid #000;
+            box-shadow: none;
+        }
+
+        .transparent-button:hover {
+            background: rgba(0,0,0,0.1);
+            color: #000;
             transform: scale(1.05);
         }
 
@@ -807,7 +904,7 @@
 
     </style>
 </head>
-<body>
+<body class="locked">
     <!-- OPENING SCREEN WITH SEAMLESS PHOTO MARQUEE AND GREEN ENVELOPE -->
     <div class="opening-screen">
         <!-- Background marquee rows -->
@@ -946,48 +1043,66 @@
 
     <!-- PAGE 2: TIMELINE / THE DAY -->
     <div class="section page-timeline">
-        <h2 class="timeline-title fade-up">the day</h2>
-        <div class="timeline-container">
+        <div class="timeline-video-wrapper">
+            <video autoplay loop muted playsinline class="timeline-video-bg">
+                <source src="197972-906217205.mp4" type="video/mp4">
+            </video>
+            <div class="timeline-overlay"></div>
+        </div>
+        <div class="timeline-scroll-content">
+            <h2 class="timeline-title fade-up">the day</h2>
+            <div class="timeline-container">
             <div class="timeline-item fade-up">
-                <div class="timeline-dot">⛪</div>
+                <div class="timeline-dot">💍</div>
+                <div class="timeline-content">
+                    <div class="timeline-time">10:00 AM</div>
+                    <div class="timeline-event">Ceremony Commences</div>
+                </div>
+            </div>
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot">🕍</div>
+                <div class="timeline-content">
+                    <div class="timeline-time">10:40 AM</div>
+                    <div class="timeline-event">Poruwa Ceremony</div>
+                </div>
+            </div>
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot">📸</div>
+                <div class="timeline-content">
+                    <div class="timeline-time">11:30 AM</div>
+                    <div class="timeline-event">Photo Session</div>
+                </div>
+            </div>
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot">🍹</div>
+                <div class="timeline-content">
+                    <div class="timeline-time">12:00 PM</div>
+                    <div class="timeline-event">Cocktail And Lunch Hour</div>
+                </div>
+            </div>
+           
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot">🎂</div>
+                <div class="timeline-content">
+                    <div class="timeline-time">2:00 PM</div>
+                    <div class="timeline-event">Cake Cutting</div>
+                </div>
+            </div>
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot">👩‍❤️‍👨</div>
+                <div class="timeline-content">
+                    <div class="timeline-time">2:30 PM</div>
+                    <div class="timeline-event">First Dance</div>
+                </div>
+            </div>
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot">✨</div>
                 <div class="timeline-content">
                     <div class="timeline-time">3:30 PM</div>
-                    <div class="timeline-event">Wedding Ceremony</div>
-                    <div class="timeline-description">852 N 1st Ave, West Hollywood</div>
+                    <div class="timeline-event">Sparkler Send Off</div>
                 </div>
             </div>
-            <div class="timeline-item fade-up">
-                <div class="timeline-dot">🍸</div>
-                <div class="timeline-content">
-                    <div class="timeline-time">4:30 PM</div>
-                    <div class="timeline-event">Cocktail Hour</div>
-                    <div class="timeline-description">852 N 1st Ave, West Hollywood</div>
-                </div>
-            </div>
-            <div class="timeline-item fade-up">
-                <div class="timeline-dot">📷</div>
-                <div class="timeline-content">
-                    <div class="timeline-time">5:00 PM</div>
-                    <div class="timeline-event">Photo Session</div>
-                    <div class="timeline-description">852 N 1st Ave, West Hollywood</div>
-                </div>
-            </div>
-            <div class="timeline-item fade-up">
-                <div class="timeline-dot">🍽️</div>
-                <div class="timeline-content">
-                    <div class="timeline-time">6:30 PM</div>
-                    <div class="timeline-event">Dinner Reception</div>
-                    <div class="timeline-description">852 N 1st Ave, West Hollywood</div>
-                </div>
-            </div>
-            <div class="timeline-item fade-up">
-                <div class="timeline-dot">💃</div>
-                <div class="timeline-content">
-                    <div class="timeline-time">8:00 PM</div>
-                    <div class="timeline-event">Dance Party</div>
-                    <div class="timeline-description">852 N 1st Ave, West Hollywood</div>
-                </div>
-            </div>
+        </div>
         </div>
     </div>
 
@@ -1005,15 +1120,18 @@
             
             <div class="rsvp-by-date fade-up">BY JUNE 01</div>
             
-            <a href="https://forms.google.com/" target="_blank" class="rsvp-button fade-up">RSVP</a>
+            <div class="action-buttons fade-up">
+                <a href="https://forms.gle/JnuXbVTchmQvZCwo6" target="_blank" class="rsvp-button">RSVP</a>
+            </div>
             
             <p class="rsvp-instructions fade-up">
-                Please click the RSVP button and kindly<br>
-                fill out the form to confirm your<br>
-                attendance.
+                Please click the button above to fill out the form<br>
+                and confirm your attendance.
             </p>
             
             <div class="rsvp-thankyou fade-up">THANK YOU!</div>
+
+            <a href="https://maps.app.goo.gl/smjq87MaUof3SxNz6?g_st=ic" target="_blank" class="rsvp-button transparent-button fade-up" style="margin-top: 25px;">Location</a>
         </div>
     </div>
 
@@ -1037,6 +1155,8 @@
                     envelopeWrapper.classList.add('opened');
                     // Add class to trigger page 1 animations
                     document.body.classList.add('envelope-opened');
+                    // Unlock scrolling
+                    document.body.classList.remove('locked');
                     
                     // Step 3: After fade out completes, hide opening screen
                     setTimeout(() => {
