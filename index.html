@@ -81,13 +81,13 @@
             position: relative;
             width: 100%;
             height: 100%;
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
             transform-style: preserve-3d;
         }
 
         .envelope-wrapper.opened {
             opacity: 0;
-            transform: scale(1.5);
+            transform: scale(1.3) translateY(20px);
             pointer-events: none;
         }
 
@@ -117,7 +117,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1) 0.5s; /* Slower, smoother slide up */
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             text-align: center;
         }
@@ -173,7 +173,7 @@
             height: 60%;
             background: #D4C5B9;
             transform-origin: top;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); /* Elegant flap open */
             z-index: 5;
             clip-path: polygon(0 0, 100% 0, 50% 100%);
             border-radius: 5px 5px 0 0;
@@ -187,7 +187,7 @@
         }
         
         .envelope-container.open .envelope-card {
-            transform: translateY(-80px);
+            transform: translateY(-110px) scale(1.02); /* Expose more of the card nicely */
             z-index: 2; /* Move it up */
         }
 
@@ -1194,7 +1194,7 @@
                 const tapText = document.querySelector('.tap-to-open-text');
                 if(tapText) tapText.style.opacity = '0';
                 
-                // Step 2: After 1.2 seconds delay (flap open + slide up), fade out wrapper
+                // Step 2: After graceful animation completes, fade out wrapper
                 setTimeout(() => {
                     envelopeWrapper.classList.add('opened');
                     // Add class to trigger page 1 animations
@@ -1205,8 +1205,8 @@
                     // Step 3: After fade out completes, hide opening screen completely
                     setTimeout(() => {
                         openingScreen.style.display = 'none';
-                    }, 800);
-                }, 1400);
+                    }, 1200);
+                }, 1800);
             }
         });
 
