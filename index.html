@@ -35,15 +35,13 @@
             justify-content: center;
             background: #FDFBF7 !important; /* Elegant Cream background */
             overflow: hidden;
-            transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: opacity 1.2s ease;
             opacity: 1;
-            transform: scale(1);
             pointer-events: auto;
         }
 
         .opening-screen.fade-out {
             opacity: 0;
-            transform: scale(1.5);
             pointer-events: none;
         }
 
@@ -202,71 +200,18 @@
             display: none;
         }
 
-        /* CSS Wax Seal - Gold with initials */
+        /* Wax Seal Image */
         .wax-seal {
             position: absolute;
             bottom: 0;
             left: 50%;
             transform: translate(-50%, 50%);
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle at 35% 35%, #D4AF37, #B8860B, #8B6914);
-            border-radius: 50%;
-            box-shadow: 
-                0 6px 15px rgba(0,0,0,0.2),
-                inset 0 -2px 5px rgba(0,0,0,0.4),
-                inset 2px 2px 4px rgba(255,255,255,0.3);
+            width: 130px;
+            height: 130px;
+            background: url('pictures/wax-seal.png') center/contain no-repeat;
             z-index: 15;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Playfair Display', serif;
-            color: #554433; /* Dark etched color inside stamp */
-            text-shadow: 0.5px 0.5px 1px rgba(255,255,255,0.4), -0.5px -0.5px 1px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
-        }
-
-        /* Inner Ring */
-        .wax-seal::before {
-            content: '';
-            position: absolute;
-            width: 76px;
-            height: 76px;
-            border: 1px solid rgba(85, 68, 51, 0.4);
-            border-radius: 50%;
-            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1), 1px 1px 2px rgba(255,255,255,0.3);
-        }
-
-        .seal-letter {
-            font-size: 32px;
-            margin: 0 4px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .seal-middle {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            height: 45px;
-            margin: 0 2px;
-            z-index: 2;
-        }
-
-        .seal-stem {
-            width: 1px;
-            height: 100%;
-            background: rgba(85, 68, 51, 0.7);
-        }
-
-        .seal-leaf {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 10px;
-            color: #554433;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
         }
 
         /* Hide wax seal when flap swings open */
@@ -314,8 +259,8 @@
             height: 100%;
             background: url('pictures/NZ6_6878.JPG.jpeg') center/cover no-repeat;
             opacity: 0;
-            transform: scale(1.1);
-            transition: opacity 2s ease-out, transform 8s ease-out;
+            transform: scale(1.05);
+            transition: opacity 1.5s ease-out, transform 4s ease-out;
         }
 
         .envelope-opened .cover-bg {
@@ -1030,7 +975,7 @@
                     <h2 class="invite-names">HARSHA & SAMADHI</h2>
                     <div class="invite-divider">
                         <span class="line"></span>
-                        <span class="leaf">🌿</span>
+                        <span class="leaf">💌</span>
                         <span class="line"></span>
                     </div>
                 </div>
@@ -1039,14 +984,7 @@
                 <div class="flap-wrapper">
                     <div class="full-flap"></div>
                     <!-- Wax Seal -->
-                    <div class="wax-seal">
-                        <span class="seal-letter">H</span>
-                        <div class="seal-middle">
-                            <div class="seal-stem"></div>
-                            <span class="seal-leaf">🌿</span>
-                        </div>
-                        <span class="seal-letter">S</span>
-                    </div>
+                    <div class="wax-seal"></div>
                 </div>
             </div>
         </div>
@@ -1205,24 +1143,28 @@
             e.stopPropagation();
             
             if (!envelopeContainer.classList.contains('open')) {
-                // Step 1: Open flap and slide card up
+                // Step 1: Open flap
                 envelopeContainer.classList.add('open');
                 const tapText = document.querySelector('.tap-to-open-text');
                 if(tapText) tapText.style.opacity = '0';
                 
-                // Step 2: After graceful animation completes, fade out wrapper
+                // Step 2: Fade envelope wrapper smoothly and reveal the page
                 setTimeout(() => {
                     envelopeWrapper.classList.add('opened');
-                    // Add class to trigger page 1 animations
+                    
+                    // Trigger page 1 background and elements exactly when envelope starts fading
                     document.body.classList.add('envelope-opened');
-                    // Unlock scrolling
                     document.body.classList.remove('locked');
                     
-                    // Step 3: After fade out completes, hide opening screen completely
+                    // Step 3: Fade out the entire opening screen completely
                     setTimeout(() => {
-                        openingScreen.style.display = 'none';
-                    }, 1200);
-                }, 1800);
+                        openingScreen.classList.add('fade-out');
+                        
+                        setTimeout(() => {
+                            openingScreen.style.display = 'none';
+                        }, 1200); 
+                    }, 500); 
+                }, 800); 
             }
         });
 
